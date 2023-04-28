@@ -21,7 +21,7 @@
         height: 480px;
     }
     canvas {
-        background: url(background.png);
+        background: url(images/background.png);
         background-size: cover;
     }
     #game-start, #game-over {
@@ -90,11 +90,11 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="bounding_box.js"></script>
-    <script src="sprite.js"></script>
-    <script src="player.js"></script>
-    <script src="gem.js"></script>
-    <script src="fire.js"></script>
+    <script src="scripts/bounding_box.js"></script>
+    <script src="scripts/sprite.js"></script>
+    <script src="scripts/player.js"></script>
+    <script src="scripts/gem.js"></script>
+    <script src="scripts/fire.js"></script>
     <script>
     $(document).ready(function() {
         /* Get the canvas and 2D context */
@@ -103,9 +103,9 @@
 
         /* Create the sounds */
         const sounds = {
-            background: new Audio("background.mp3"),
-            collect: new Audio("collect.mp3"),
-            gameover: new Audio("gameover.mp3")
+            background: new Audio("audio/background.mp3"),
+            collect: new Audio("audio/collect.mp3"),
+            gameover: new Audio("audio/gameover.mp3")
         };
 
         const totalGameTime = 20;   // Total game time in seconds
