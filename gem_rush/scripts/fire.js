@@ -8,7 +8,7 @@ const Fire = function(ctx, x, y) {
     sprite.setSequence(fire.icon)
           .setScale(2)
           .setShadowScale({ x: 0.75, y: 0.2 })
-          .useSheet("object_sprites.png");
+          .useSheet("images/object_sprites.png");
 
     return {
         

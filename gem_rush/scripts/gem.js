@@ -21,7 +21,7 @@ const Gem = function(ctx, x, y, color) {
     sprite.setSequence(sequences[color])
           .setScale(2)
           .setShadowScale({ x: 0.75, y: 0.2 })
-          .useSheet("object_sprites.png");
+          .useSheet("images/object_sprites.png");
 
     // This is the birth time of the gem for finding its age.
     let birthTime = performance.now();
