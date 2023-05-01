@@ -32,29 +32,33 @@ app.post("/register", (req, res) => {
     // Get the JSON data from the body
     const { username, name, password } = req.body;
 
-    //
-    // D. Reading the users.json file
-    //
+    // Reading the users.json file
+    const users = JSON.parse(fs.readFileSync("data/users.json"));
 
-    //
-    // E. Checking for the user data correctness
-    //
+    // Checking for the user data correctness
+    if (username === "" || name === "" || password === "") {
+        res.json({ status: "error", error: "Please fill in all the fields." });
+        return;
+    }
+    // check if the username already exists
+    if (username in users) {
+        res.json({ status: "error", error: "Username already exists." });
+        return;
+    }
 
+    // Adding the new user account
+    const hash = bcrypt.hashSync(password, 10);
 
-    //
-    // G. Adding the new user account
-    //
-
-    //
     // H. Saving the users.json file
-    //
+    users[username] = {name, password: hash};
 
-    //
     // I. Sending a success response to the browser
-    //
+    fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
+
+    res.json({ status: "success" });
 
     // Delete when appropriate
-    res.json({ status: "error", error: "This endpoint is not yet implemented." });
+    // res.json({ status: "error", error: "This endpoint is not yet implemented." });
 });
 
 // Handle the /signin endpoint
