@@ -1,3 +1,29 @@
 [
-  
+  {
+    "user": {
+      "username": "Sus",
+      "name": "Sus",
+      "status": 0,
+      "elo": 0,
+      "frd_list": [
+        "test",
+        "Ass",
+        "Ayo",
+        "WhatsUP"
+      ]
+    },
+    "datetime": "2023-05-05T18:24:16.421Z",
+    "content": "test"
+  },
+  {
+    "user": {
+      "username": "test",
+      "name": "test",
+      "status": 0,
+      "elo": 0,
+      "frd_list": []
+    },
+    "datetime": "2023-05-05T18:38:32.160Z",
+    "content": "Sus"
+  }
 ]
