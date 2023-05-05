@@ -1,0 +1,14 @@
+{
+  "Sus": {
+    "name": "Sus",
+    "password": "$2b$10$3PtQGIIMCGkYNK5Dhu5.NelKEGNuwXUKmtdrwQg3Bh6RnfTpBX1aC",
+    "status": 0,
+    "high_score": 0
+  },
+  "test": {
+    "name": "test",
+    "password": "$2b$10$EJwRq3rORxxMtDtFvT8jeOVuqtwExEX9XFd0SVt91z.zqzl2g3eXm",
+    "status": 0,
+    "high_score": 0
+  }
+}
