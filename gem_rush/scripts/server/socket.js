@@ -14,6 +14,7 @@ const Socket = (function() {
         // Wait for the socket to connect successfully
         socket.on("connect", () => {
             // Get the online user list
+            
             socket.emit("get users");
 
             // Get the chatroom messages
@@ -25,7 +26,7 @@ const Socket = (function() {
             onlineUsers = JSON.parse(onlineUsers);
 
             // Show the online users
-            // OnlineUsersPanel.update(onlineUsers);
+            OnlineUsersPanel.update(onlineUsers);
         });
 
         // Set up the add user event
@@ -33,7 +34,7 @@ const Socket = (function() {
             user = JSON.parse(user);
 
             // Add the online user
-            // OnlineUsersPanel.addUser(user);
+            OnlineUsersPanel.addUser(user);
         });
 
         // Set up the remove user event
@@ -41,23 +42,30 @@ const Socket = (function() {
             user = JSON.parse(user);
 
             // Remove the online user
-            // OnlineUsersPanel.removeUser(user);
+            OnlineUsersPanel.removeUser(user);
+        });
+        
+        socket.on("request sent", () => {
+            $("#chat-input:text").attr('placeholder', 'Friend request was sent.');
+            // promptTimeout = setTimeout(() => {
+            //     $("#chat-input:text").attr('placeholder', 'Send friend request: Enter a Username');
+            // }, 3000);
+            // clearTimeout(promptTimeout);
+            thisUser = Authentication.getUser();
+            console.log(thisUser);
+            sta = thisUser.status;
+            hs = thisUser.high_score;
+            console.log('sta:'+sta);
+            console.log('hs:'+hs);
         });
 
-        // Set up the messages event
-        socket.on("messages", (chatroom) => {
-            chatroom = JSON.parse(chatroom);
-
-            // Show the chatroom messages
-            // ChatPanel.update(chatroom);
-        });
-
-        // Set up the add message event
-        socket.on("add message", (message) => {
-            message = JSON.parse(message);
-
-            // Add the message to the chatroom
-            // ChatPanel.addMessage(message);
+        // Catch if username does not exist
+        socket.on("user not exist", (username) => {
+            $("#chat-input:text").attr('placeholder', username + ' does not exist. Try again.');
+            // promptTimeout = setTimeout(() => {
+            //     $("#chat-input:text").attr('placeholder', 'Send friend request: Enter a Username');
+            // }, 3000);
+            // clearTimeout(promptTimeout);
         });
     };
 
@@ -68,11 +76,11 @@ const Socket = (function() {
     };
 
     // This function sends a post message event to the server
-    const postMessage = function(content) {
+    const sendRequest = function(content) {
         if (socket && socket.connected) {
-            socket.emit("post message", content);
+            socket.emit("send Request", content);
         }
     };
 
-    return { getSocket, connect, disconnect, postMessage };
+    return { getSocket, connect, disconnect, sendRequest };
 })();
