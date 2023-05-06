@@ -243,16 +243,21 @@ io.on("connection", (socket) => {
             console.log("stop it");
             return;
         }
+        // you guys are already FRIENDS!!!
+        // for(/* let i in users[user].frd_list */){
+        //     if(/* i == content */){
+        //         socket.emit("Already Friends");
+        //         return;
+        //     }
+        // }
+        
         // read request folder
         const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
         // say no to repeated friend request
         for(const frd_req of requestList){
-            console.log("frd req sender: " + frd_req.user.username);
-            console.log("frd req target: " + frd_req.content);
             if((frd_req.user.username.localeCompare(socket.request.session.user.username) == 0) && 
                (frd_req.content.localeCompare(content) == 0)){
                 socket.emit("repeated request");
-                console.log("repeated request");
                 return;
             }
         }
@@ -267,6 +272,29 @@ io.on("connection", (socket) => {
         fs.writeFileSync("data/frd_request.json", JSON.stringify(requestList, null, "  "));
         io.emit("request sent", socket.request.session.user, JSON.stringify(message));
         //io.emit("add message", JSON.stringify(message));
+    });
+
+    socket.on("add friend", (friend) => {
+        const users = JSON.parse(fs.readFileSync("data/users.json"));
+        for(let user in users){
+            if(user == socket.request.session.user.username){
+                console.log(users[user].frd_list);
+                users[user].frd_list.push(String(friend));
+                users[friend].frd_list.push(String(user));
+                break;
+            };
+        };
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
+
+        // delete that specific request in frd_request.json
+        // ...
+    });
+
+    socket.on("remove friend", (friend) => {
+
+        // delete that specific request in frd_request.json
+        //const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
+        // ...
     });
 
 });
