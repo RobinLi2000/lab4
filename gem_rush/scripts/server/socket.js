@@ -13,9 +13,7 @@ const Socket = (function() {
 
         // Wait for the socket to connect successfully
         socket.on("connect", () => {
-            
             // Get the online user list
-            
             socket.emit("get users");
 
             // Get the chatroom messages
@@ -75,25 +73,12 @@ const Socket = (function() {
                 $("#chat-input:text").attr('placeholder', 'Friend request was sent.');
             }else if(Authentication.getUser().username == request.content){
                 ChatPanel.addRequest(request);
-                thisUser = Authentication.getUser();
-                console.log(thisUser);
-                sta = thisUser.status;
-                elo = thisUser.elo;
-                fl = thisUser.frd_list;
-                console.log('sta:'+sta);
-                console.log('elo:'+elo);
-                console.log('fd:'+fl);
             }            
-            
         });
 
         // Catch if username does not exist
         socket.on("user not exist", (username) => {
             $("#chat-input:text").attr('placeholder', username + ' does not exist. Try again.');
-            // promptTimeout = setTimeout(() => {
-            //     $("#chat-input:text").attr('placeholder', 'Send friend request: Enter a Username');
-            // }, 3000);
-            // clearTimeout(promptTimeout);
         });
 
         socket.on("repeated request", () => {
@@ -102,6 +87,10 @@ const Socket = (function() {
 
         socket.on("Stop adding yourself, you have no friends?", () => {
             $("#chat-input:text").attr('placeholder', 'Try make some friends in quick play, LOL');
+        });
+
+        socket.on("Already Friends", () => {
+            $("#chat-input:text").attr('placeholder', 'How can you forget who is your friend huh?');
         });
 
     };
@@ -119,17 +108,34 @@ const Socket = (function() {
         }
     };
 
-    // const AddFriend = function(content) {
-    //     if (socket && socket.connected) {
-    //         socket.emit("send Request", content);
-    //     }
-    // };
+    const buttonGroup = document.getElementById("chat-area");
 
-    // const RemoveFriend = function(content) {
-    //     if (socket && socket.connected) {
-    //         socket.emit("send Request", content);
-    //     }
-    // };
+    const buttonGroupPressed = e => { 
+        const isButton = e.target.nodeName === 'BUTTON';
+  
+        if(!isButton) {
+            return;
+        }
+        //console.log(`ID of <em>${e.target.innerHTML}</em> is <strong>${e.target.id}</strong>`);
+
+        friend = e.target.id.split("_", 1);
+        if(e.target.innerHTML == "+"){
+            //console.log("+++");
+
+            if (socket && socket.connected) {
+                socket.emit("add friend", friend);
+            }
+        }else if(e.target.innerHTML == "-"){
+            //console.log("---");
+
+            if (socket && socket.connected) {
+                socket.emit("remove friend", friend);
+            }
+        }
+
+    };
+
+    buttonGroup.addEventListener("click", buttonGroupPressed);
 
     return { getSocket, connect, disconnect, sendRequest };
 })();
