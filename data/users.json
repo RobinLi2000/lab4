@@ -1,21 +1,30 @@
 {
   "Sus": {
     "name": "Sus",
-    "password": "$2b$10$/go7O5P5osmUPxqEvxZh6u90mGO2lLYsWbDI8DGUK0CF95k5HiWEq",
+    "password": "$2b$10$6f8RGMFf7g7MTWIj/4BjleyzIHKsOvsXx2w20UcQXDO/P9nHpziyG",
     "status": 0,
     "elo": 0,
     "frd_list": [
       "test",
-      "Ass",
-      "Ayo",
-      "WhatsUP"
+      "3rd"
     ]
   },
   "test": {
     "name": "test",
-    "password": "$2b$10$WWNo1g6S7bAIyCzFP5QRx..NTvI2NBETKQU1gQiP0dI0htPO5iavu",
+    "password": "$2b$10$rIhboCfvTGJiPrqmVXOZ1eCIF97NxdIuYk1036/fW2vSzLOKC4rXu",
     "status": 0,
     "elo": 0,
-    "frd_list": []
+    "frd_list": [
+      "Sus"
+    ]
+  },
+  "3rd": {
+    "name": "3rd",
+    "password": "$2b$10$kJl0tHvcuBlJ4ZGA.5NdRuTNIDtE7yDHQajsCdmzP4I.YEQTpuYRS",
+    "status": 0,
+    "elo": 0,
+    "frd_list": [
+      "Sus"
+    ]
   }
 }

@@ -1,19 +1,25 @@
 [
   {
     "user": {
-      "username": "Sus",
-      "name": "Sus",
+      "username": "test",
+      "name": "test",
       "status": 0,
       "elo": 0,
-      "frd_list": [
-        "test",
-        "Ass",
-        "Ayo",
-        "WhatsUP"
-      ]
+      "frd_list": []
     },
-    "datetime": "2023-05-05T18:24:16.421Z",
-    "content": "test"
+    "datetime": "2023-05-06T04:59:39.564Z",
+    "content": "Sus"
+  },
+  {
+    "user": {
+      "username": "3rd",
+      "name": "3rd",
+      "status": 0,
+      "elo": 0,
+      "frd_list": []
+    },
+    "datetime": "2023-05-06T04:59:47.953Z",
+    "content": "Sus"
   },
   {
     "user": {
@@ -23,7 +29,7 @@
       "elo": 0,
       "frd_list": []
     },
-    "datetime": "2023-05-05T18:38:32.160Z",
-    "content": "Sus"
+    "datetime": "2023-05-06T05:17:54.677Z",
+    "content": "3rd"
   }
 ]
