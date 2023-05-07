@@ -13,9 +13,10 @@ const Registration = (function() {
         //
 
         const status = 0;
-        const high_score = 0;
+        const elo = 0;
+        const frd_list = [];
 
-        const json = JSON.stringify({username, name, password, status, high_score})
+        const json = JSON.stringify({username, name, password, status, elo, frd_list})
         console.log("JSON: ", json);
  
         // Sending the AJAX request to the server

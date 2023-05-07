@@ -174,6 +174,59 @@ const OnlineUsersPanel = (function() {
     return { initialize, update, addUser, removeUser };
 })();
 
+// const FriendListPanel = (function() {
+//     // This function initializes the UI
+//     const initialize = function() {};
+
+//     // This function updates the online users panel
+//     const update = function(onlineUsers) {
+//     const friends = $("#friend-list-area");
+
+        // // Clear the online users area
+        // friends.empty();
+
+// 		// Get the current user
+//         const currentUser = Authentication.getUser();
+
+//         // Add the user one-by-one
+            // for (const username in currentUser.frd_list) {
+            //     friends.append(
+            //         $("<div id='username-" + username + "'></div>")
+            //             .append(UI.getUserDisplay(onlineUsers[username]))
+            //     );
+            // }
+//     };
+
+//     // This function adds a user in the panel
+// 	const addUser = function(user) {
+//         const onlineUsersArea = $("#online-users-area");
+		
+// 		// Find the user
+// 		const userDiv = onlineUsersArea.find("#username-" + user.username);
+		
+// 		// Add the user
+// 		if (userDiv.length == 0) {
+// 			onlineUsersArea.append(
+// 				$("<div id='username-" + user.username + "'></div>")
+// 					.append(UI.getUserDisplay(user))
+// 			);
+// 		}
+// 	};
+
+//     // This function removes a user from the panel
+// 	const removeUser = function(user) {
+//         const onlineUsersArea = $("#online-users-area");
+		
+// 		// Find the user
+// 		const userDiv = onlineUsersArea.find("#username-" + user.username);
+		
+// 		// Remove the user
+// 		if (userDiv.length > 0) userDiv.remove();
+// 	};
+
+//     return { initialize, update, addUser, removeUser };
+// })();
+
 const ChatPanel = (function() {
 	// This stores the chat area
     let chatArea = null;
@@ -200,34 +253,42 @@ const ChatPanel = (function() {
  	};
 
     // This function updates the chatroom area
-    const update = function(chatroom) {
+    const update = function(requestList) {
         // Clear the online users area
         chatArea.empty();
 
         // Add the chat message one-by-one
-        for (const message of chatroom) {
-			addMessage(message);
+        for (const message of requestList) {
+			addRequest(message);
         }
     };
 
     // This function adds a new message at the end of the chatroom
-    const addMessage = function(message) {
-		const datetime = new Date(message.datetime);
+    const addRequest = function(request) {
+        console.log(request.content);
+        console.log(Authentication.getUser().username);
+		const datetime = new Date(request.datetime);
 		const datetimeString = datetime.toLocaleDateString() + " " +
 							   datetime.toLocaleTimeString();
 
-		chatArea.append(
-			$("<div class='chat-message-panel row'></div>")
-				.append(UI.getUserDisplay(message.user))
-				.append($("<div class='chat-message col'></div>")
-					.append($("<div class='chat-date'>" + datetimeString + "</div>"))
-					.append($("<div class='chat-content'>" + message.content + "</div>"))
+        if(request.content.localeCompare(Authentication.getUser().username)==0){
+            
+		    chatArea.append(
+			    $("<div class='chat-message-panel row'></div>")
+				    .append(UI.getUserDisplay(request.user))
+				    .append($("<div class='chat-message col'></div>")
+				    	.append($("<div class='chat-date'>" + datetimeString + "</div>"))
+					    //.append($("<div class='chat-content'>" + message.content + "</div>"))
 				)
-		);
+                .append($("<button class='add-friend-button'>+</button>"))
+                .append($("<button class='remove-friend-button'>-</button>"))
+                
+		    );
+        };
 		chatArea.scrollTop(chatArea[0].scrollHeight);
     };
 
-    return { initialize, update, addMessage };
+    return { initialize, update, addRequest };
 })();
 
 const UI = (function() {
