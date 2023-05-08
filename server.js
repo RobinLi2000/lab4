@@ -127,6 +127,23 @@ app.get("/signout", (req, res) => {
     res.json({status: "success"});
 });
 
+// Matchmaking system
+let queue = [];
+const findingMatch = function(socketID){
+    queue.push(socketID);
+    if(queue.length >= 2){
+        // The match has been found
+        const player1 = queue.shift();
+        const player2 = queue.shift();
+        return[player1, player2];
+    }
+    else {
+        // The match has not yet been found
+        return null;
+    }
+};
+
+
 const{ createServer } = require("http");
 const{ Server } = require("socket.io");
 const httpServer = createServer(app);
@@ -294,6 +311,15 @@ io.on("connection", (socket) => {
         fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
     }
     );
+
+    // Matchmaking
+    socket.on("finding match", () => {
+        matchMakingResult = MatchMaking.findingMatch(socket.id);
+        if (matchMakingResult) {
+            io.to(matchMakingResult[0]).join(socket.id);
+            io.to(matchMakingResult[1]).join(socket.id);
+        }
+    });
 });
 
 var removeByAttr = function(arr,  sdr_value,  rec_value){
