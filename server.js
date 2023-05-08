@@ -121,70 +121,6 @@ app.get("/signout", (req, res) => {
     res.json({status: "success"});
 });
 
-// app.get("/addFriend", (req, res) => {
-//     // Getting req.session.user
-//     if (!req.session.user) {
-//         res.json({ status: "error", error: "User is not logged in." });
-//         return;
-//     }
-
-//     // Get the JSON data from the body
-//     const { username } = req.query;
-
-//     // Reading the users.json file
-//     const users = JSON.parse(fs.readFileSync("data/users.json"));
-
-//     // check if the username exists
-//     if (!(username in users)) {
-//         res.json({ status: "error", error: "Username does not exist." });
-//         return;
-//     }
-
-//     // check if the username is the same as the current user
-//     if (username === req.session.user.username) {
-//         res.json({ status: "error", error: "You cannot add yourself as a friend." });
-//         return;
-//     }
-
-//     // check if the username is already a friend
-//     if (username in req.session.user.friends) {
-//         res.json({ status: "error", error: "This user is already your friend." });
-//         return;
-//     }
-
-//     // Adding the new friend
-//     req.session.user.friends[username] = users[username].name;
-
-//     // Sending a success response to the browser
-//     res.json({ status: "success" });
-// });
-
-// app.get("/removeFriend", (req, res) => {
-//     // Getting req.session.user
-//     if (!req.session.user) {
-//         res.json({ status: "error", error: "User is not logged in." });
-//         return;
-//     }
-
-//     // Get the JSON data from the body
-//     const { username } = req.query;
-
-//     // Reading the users.json file
-//     const users = JSON.parse(fs.readFileSync("data/users.json"));
-
-//     // check if the username exists
-//     if (!(username in users)) {
-//         res.json({ status: "error", error: "Username does not exist." });
-//         return;
-//     }
-
-//     // check if the username is the same as the current user
-//     if (username === req.session.user.username) {
-//         res.json({ status: "error", error: "You cannot remove yourself as a friend." });
-//         return;
-//     }
-// });
-
 const{ createServer } = require("http");
 const{ Server } = require("socket.io");
 const httpServer = createServer(app);
@@ -203,7 +139,14 @@ io.on("connection", (socket) => {
     // connecting socket
     if(socket.request.session.user){
         onlineUsers[socket.request.session.user.username] = {name: socket.request.session.user.name};
-        socket.emit("your friends", socket.request.session.user.frd_list[1]);
+        const users = JSON.parse(fs.readFileSync("data/users.json"));
+        for(let user in users){
+            if(user == socket.request.session.user.username){
+                users[user].status = 1;
+            }
+        }
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
+        socket.emit("load friend", JSON.stringify(socket.request.session.user.frd_list));
         io.emit("add user", JSON.stringify(socket.request.session.user));
         console.log("Online Users: ");
         console.log(onlineUsers);
@@ -212,6 +155,14 @@ io.on("connection", (socket) => {
     // disconnected socket
     socket.on("disconnect", () => {
         delete onlineUsers[socket.request.session.user.username];
+        const users = JSON.parse(fs.readFileSync("data/users.json"));
+        for(let user in users){
+            if(user == socket.request.session.user.username){
+                users[user].status = 0;
+            }
+        }
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
+        //socket.emit("unload friend", JSON.stringify(socket.request.session.user.frd_list));
         io.emit("remove user", JSON.stringify(socket.request.session.user));
         console.log("Online Users: ");
         console.log(onlineUsers);
@@ -222,6 +173,14 @@ io.on("connection", (socket) => {
         const list = JSON.stringify(onlineUsers);
         socket.emit("users", list);
     });
+
+    // fetch friends
+    socket.on("get friends", () => {
+        const list = JSON.stringify(socket.request.session.user.frd_list);
+        //console.log("init friend list: "+list);
+        socket.emit("friends", list);
+    });
+
     // fetch friend request
     socket.on("get frd request", () => {
         const requests = JSON.parse(fs.readFileSync("data/frd_request.json"), "utf-8");
@@ -230,7 +189,6 @@ io.on("connection", (socket) => {
     // Validation on friend request
     socket.on("send request", (content) => {
         // sanity checking
-        console.log(content);
         const users = JSON.parse(fs.readFileSync("data/users.json"));
         // check if the username already existed
         if(!(content in users)){
@@ -240,22 +198,23 @@ io.on("connection", (socket) => {
         // friendzoning urself is illegal
         if((content.localeCompare(socket.request.session.user.username) == 0)){
             socket.emit("Stop adding yourself, you have no friends?");
-            console.log("stop it");
             return;
         }
         // you guys are already FRIENDS!!!
-        // for(/* let i in users[user].frd_list */){
-        //     if(/* i == content */){
-        //         socket.emit("Already Friends");
-        //         return;
-        //     }
-        // }
+        let i = 0;
+        for(let user in users){
+            if(users[user].frd_list[i] == content){
+                socket.emit("Already Friends");
+                return;
+            }
+            i++;
+        }
         
         // read request folder
         const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
         // say no to repeated friend request
         for(const frd_req of requestList){
-            if((frd_req.user.username.localeCompare(socket.request.session.user.username) == 0) && 
+            if((frd_req.name.localeCompare(socket.request.session.user.username) == 0) && 
                (frd_req.content.localeCompare(content) == 0)){
                 socket.emit("repeated request");
                 return;
@@ -263,7 +222,7 @@ io.on("connection", (socket) => {
         }
         // request content
         const message = {
-            user: socket.request.session.user,
+            name: socket.request.session.user.username,
             datetime: new Date(),
             content: content
         };
@@ -271,33 +230,50 @@ io.on("connection", (socket) => {
         requestList.push(message);
         fs.writeFileSync("data/frd_request.json", JSON.stringify(requestList, null, "  "));
         io.emit("request sent", socket.request.session.user, JSON.stringify(message));
-        //io.emit("add message", JSON.stringify(message));
     });
 
     socket.on("add friend", (friend) => {
         const users = JSON.parse(fs.readFileSync("data/users.json"));
+        const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
         for(let user in users){
             if(user == socket.request.session.user.username){
-                console.log(users[user].frd_list);
                 users[user].frd_list.push(String(friend));
                 users[friend].frd_list.push(String(user));
+                removeByAttr(requestList, String(friend), String(user));
+                removeByAttr(requestList, String(user), String(friend));
                 break;
             };
         };
+        fs.writeFileSync("data/frd_request.json", JSON.stringify(requestList, null, "  "));
         fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
-
-        // delete that specific request in frd_request.json
-        // ...
     });
 
-    socket.on("remove friend", (friend) => {
-
+    socket.on("reject friend", (friend) => {
         // delete that specific request in frd_request.json
-        //const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
-        // ...
+        const users = JSON.parse(fs.readFileSync("data/users.json"));
+        const requestList = JSON.parse(fs.readFileSync("data/frd_request.json"));
+        for(let user in users){
+            if(user == socket.request.session.user.username){
+                removeByAttr(requestList, String(friend), String(user));
+                break;
+            };
+        };
+        fs.writeFileSync("data/frd_request.json", JSON.stringify(requestList, null, "  "));
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
     });
-
 });
+
+var removeByAttr = function(arr,  sdr_value,  rec_value){
+    var i = 0;
+    for(const frd_req of arr){        
+        if((frd_req.name.localeCompare(sdr_value) == 0) && 
+           (frd_req.content.localeCompare(rec_value) == 0)){
+            arr.splice(i, 1);
+        }
+        i++;
+    }
+    return arr;
+}
 
 // Use a web server to listen at port 8000
 httpServer.listen(8000, () => {

@@ -16,6 +16,9 @@ const Socket = (function() {
             // Get the online user list
             socket.emit("get users");
 
+            // Get the friend list
+            socket.emit("get friends");
+
             // Get the chatroom messages
             socket.emit("get frd request");
         });
@@ -44,18 +47,25 @@ const Socket = (function() {
             OnlineUsersPanel.removeUser(user);
         });
 
-        // socket.on("your friends", () => {
-        //     currentUser = Authentication.getUser();
+        socket.on("friends", (friends) => {
+            friends = JSON.parse(friends);
+            
+            // Show friends
+            FriendListPanel.update(friends);
+        });
 
-        //     FriendListPanel.update(currentUser);
-        // });
+        socket.on("load friend", (friends) => {
+            friends = JSON.parse(friends);
 
-        // socket.on("add friend", () => {
+            // Add friend
+            FriendListPanel.addUser(friends);
+        });
 
-        // });
+        // socket.on("unfriend friend", (friends) => {
+        //     friends = JSON.parse(friends);
 
-        // socket.on("remove friend", () => {
-
+        //     // Add friend
+        //     FriendListPanel.addUser(friends);
         // });
 
         // Set up the messages event
@@ -108,6 +118,7 @@ const Socket = (function() {
         }
     };
 
+    // Add/Reject Friend Rquest
     const buttonGroup = document.getElementById("chat-area");
 
     const buttonGroupPressed = e => { 
@@ -116,23 +127,18 @@ const Socket = (function() {
         if(!isButton) {
             return;
         }
-        //console.log(`ID of <em>${e.target.innerHTML}</em> is <strong>${e.target.id}</strong>`);
 
         friend = e.target.id.split("_", 1);
-        if(e.target.innerHTML == "+"){
-            //console.log("+++");
 
+        if(e.target.innerHTML == "+"){
             if (socket && socket.connected) {
                 socket.emit("add friend", friend);
             }
         }else if(e.target.innerHTML == "-"){
-            //console.log("---");
-
             if (socket && socket.connected) {
-                socket.emit("remove friend", friend);
+                socket.emit("reject friend", friend);
             }
         }
-
     };
 
     buttonGroup.addEventListener("click", buttonGroupPressed);

@@ -174,58 +174,56 @@ const OnlineUsersPanel = (function() {
     return { initialize, update, addUser, removeUser };
 })();
 
-// const FriendListPanel = (function() {
-//     // This function initializes the UI
-//     const initialize = function() {};
+const FriendListPanel = (function() {
+    // This function initializes the UI
+    const initialize = function() {};
 
-//     // This function updates the online users panel
-//     const update = function(onlineUsers) {
-//     const friends = $("#friend-list-area");
+    // This function updates the online users panel
+    const update = function(friendlist) {
+    const friends = $("#friend-list-area");
 
-        // // Clear the online users area
-        // friends.empty();
+        // Clear the online users area
+        friends.empty();
 
-// 		// Get the current user
-//         const currentUser = Authentication.getUser();
+		// Get the current user
+        //const currentUser = Authentication.getUser();
 
-//         // Add the user one-by-one
-            // for (const username in currentUser.frd_list) {
-            //     friends.append(
-            //         $("<div id='username-" + username + "'></div>")
-            //             .append(UI.getUserDisplay(onlineUsers[username]))
-            //     );
-            // }
-//     };
+        // Add the user one-by-one
+            for (let friend in friendlist) {
+                //console.log("friend and list: "+friend+", "+friend[0]+", "+friendlist);
+                friends.append(
+                    $("<div id='username-" + friendlist[friend] + "'></div>")
+                        .append($("<div class='field-content row shadow'></div>")
+                            .append($("<span class='user-name'>" + friendlist[friend] + "</span>")))
+                );
+            }
+    };
 
-//     // This function adds a user in the panel
-// 	const addUser = function(user) {
-//         const onlineUsersArea = $("#online-users-area");
+    // This function adds a user in the panel
+	const addUser = function(user) {
+        console.log("what the heck is this: "+user);
+        const onlineUsersArea = $("#friend-list-area");
 		
-// 		// Find the user
-// 		const userDiv = onlineUsersArea.find("#username-" + user.username);
+        
+        // Find the user
+		const userDiv = onlineUsersArea.find("#username-" + user);
 		
-// 		// Add the user
-// 		if (userDiv.length == 0) {
-// 			onlineUsersArea.append(
-// 				$("<div id='username-" + user.username + "'></div>")
-// 					.append(UI.getUserDisplay(user))
-// 			);
-// 		}
-// 	};
+        // Add the user
+        if (userDiv.length == 0) {
+            
+            onlineUsersArea.append(
+                $("<div id='username-" + user + "'></div>")
+                    .append($("<div class='field-content row shadow'></div>")
+                        .append($("<span class='user-name'>" + user + "</span>")))
+            );
+        }
+        
 
-//     // This function removes a user from the panel
-// 	const removeUser = function(user) {
-//         const onlineUsersArea = $("#online-users-area");
 		
-// 		// Find the user
-// 		const userDiv = onlineUsersArea.find("#username-" + user.username);
-		
-// 		// Remove the user
-// 		if (userDiv.length > 0) userDiv.remove();
-// 	};
+	};
 
-//     return { initialize, update, addUser, removeUser };
-// })();
+    return { initialize, update, addUser };
+})();
 
 const ChatPanel = (function() {
 	// This stores the chat area
@@ -265,8 +263,6 @@ const ChatPanel = (function() {
 
     // This function adds a new message at the end of the chatroom
     const addRequest = function(request) {
-        console.log(request.content);
-        console.log(Authentication.getUser().username);
 		const datetime = new Date(request.datetime);
 		const datetimeString = datetime.toLocaleDateString() + " " +
 							   datetime.toLocaleTimeString();
@@ -275,16 +271,17 @@ const ChatPanel = (function() {
             
 		    chatArea.append(
 			    $("<div class='chat-message-panel row'></div>")
-				    .append(UI.getUserDisplay(request.user))
+				    .append(UI.getUserDisplay(request))
 				    .append($("<div class='chat-message col'></div>")
 				    	.append($("<div class='chat-date'>" + datetimeString + "</div>"))
 					    //.append($("<div class='chat-content'>" + message.content + "</div>"))
 				)
-                .append($("<button class='add-friend-button'>+</button>"))
-                .append($("<button class='remove-friend-button'>-</button>"))
+                .append($("<button class='add-friend-button' id='" + request.name +"_add'>+</button>"))
+                .append($("<button class='remove-friend-button' id='" + request.name +"_remove'>-</button>"))
                 
 		    );
         };
+        console.log()
 		chatArea.scrollTop(chatArea[0].scrollHeight);
     };
 
@@ -301,7 +298,7 @@ const UI = (function() {
     };
 
     // The components of the UI are put here
-    const components = [SignInForm, UserPanel, OnlineUsersPanel, ChatPanel];
+    const components = [SignInForm, UserPanel, OnlineUsersPanel, FriendListPanel, ChatPanel];
 
     // This function initializes the UI
     const initialize = function() {
