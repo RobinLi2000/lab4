@@ -28,6 +28,12 @@ function containWordCharsOnly(text) {
     return /^\w+$/.test(text);
 }
 
+// Handle the / endpoint
+app.get("/", function(req, res) {
+    const filePath = "gem_rush/index.html";
+    res.sendFile(filePath, { root: __dirname });
+});
+
 // Handle the /register endpoint
 app.post("/register", (req, res) => {
     // Get the JSON data from the body
@@ -261,6 +267,33 @@ io.on("connection", (socket) => {
         fs.writeFileSync("data/frd_request.json", JSON.stringify(requestList, null, "  "));
         fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
     });
+
+    // Remove Friend from friend list
+    socket.on("remove friend", (friend) => {
+        const users = JSON.parse(fs.readFileSync("data/users.json"));
+
+        // Check if the friend is in the friend list
+        if (!users[socket.request.session.user.username].frd_list.includes(friend)) {
+            socket.emit("That user is not your friend or the user does not exist.");
+            return;
+        }
+
+        // Remove the friend from caller's friend list
+        const resultArray = users[socket.request.session.user.username].frd_list.filter((item) => {
+            return item !== friend;
+        }
+        );
+        users[socket.request.session.user.username].frd_list = resultArray;
+
+        // Remove the caller from friend's friend list
+        const resultArray2 = users[friend].frd_list.filter((item) => {
+            return item !== socket.request.session.user.username;
+        }
+        );
+        users[friend].frd_list = resultArray2;
+        fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
+    }
+    );
 });
 
 var removeByAttr = function(arr,  sdr_value,  rec_value){
