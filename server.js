@@ -8,7 +8,7 @@ const session = require("express-session");
 const app = express();
 
 // Use the 'public' folder to serve static files
-app.use(express.static("public"));
+app.use(express.static("gem_rush"));
 
 // Use the json middleware to parse JSON data
 app.use(express.json());
@@ -126,6 +126,23 @@ app.get("/signout", (req, res) => {
     // Sending a success response
     res.json({status: "success"});
 });
+
+// Matchmaking system
+let queue = [];
+const findingMatch = function(socketID){
+    queue.push(socketID);
+    if(queue.length >= 2){
+        // The match has been found
+        const player1 = queue.shift();
+        const player2 = queue.shift();
+        return[player1, player2];
+    }
+    else {
+        // The match has not yet been found
+        return null;
+    }
+};
+
 
 const{ createServer } = require("http");
 const{ Server } = require("socket.io");
@@ -294,6 +311,27 @@ io.on("connection", (socket) => {
         fs.writeFileSync("data/users.json", JSON.stringify(users, null, "  "));
     }
     );
+
+    // Matchmaking
+    socket.on("finding match", () => {
+        matchMakingResult = MatchMaking.findingMatch(socket.id);
+        if (matchMakingResult) {
+            io.to(matchMakingResult[0]).join(socket.id);
+            io.to(matchMakingResult[1]).join(socket.id);
+            io.to(socket.id).emit("navigate to", "/gem_rush.html");
+        }
+    });
+    
+    // Matchmaking client side code
+    // Please add this to the client side
+    // Debug might be needed
+// =============================================================
+    // Client-side code
+    // const socket = io();
+    // socket.on("navigate to", (url) => {
+    // window.location.href = url;
+    // });
+// =============================================================
 });
 
 var removeByAttr = function(arr,  sdr_value,  rec_value){
