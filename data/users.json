@@ -4,27 +4,20 @@
     "password": "$2b$10$6f8RGMFf7g7MTWIj/4BjleyzIHKsOvsXx2w20UcQXDO/P9nHpziyG",
     "status": 0,
     "elo": 0,
-    "frd_list": [
-      "test",
-      "3rd"
-    ]
+    "frd_list": []
   },
   "test": {
     "name": "test",
     "password": "$2b$10$rIhboCfvTGJiPrqmVXOZ1eCIF97NxdIuYk1036/fW2vSzLOKC4rXu",
     "status": 0,
     "elo": 0,
-    "frd_list": [
-      "Sus"
-    ]
+    "frd_list": []
   },
   "3rd": {
     "name": "3rd",
     "password": "$2b$10$kJl0tHvcuBlJ4ZGA.5NdRuTNIDtE7yDHQajsCdmzP4I.YEQTpuYRS",
     "status": 0,
     "elo": 0,
-    "frd_list": [
-      "Sus"
-    ]
+    "frd_list": []
   }
 }
