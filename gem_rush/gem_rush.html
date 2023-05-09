@@ -87,6 +87,23 @@
                 gem(s).
             </text>
         </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" id="result" style="display: none">
+            <defs>
+                <linearGradient id="game-over-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="red" />
+                    <stop offset="0.5" stop-color="yellow" />
+                    <stop offset="1" stop-color="red" />
+                </linearGradient>
+            </defs>
+            <text x="50%" y="50%">
+                You 
+                <tspan id="win_lose">0</tspan>
+                Other player's score:
+                <tspan id="other_player_score">0</tspan>
+                gem(s).
+            </text>
+        </svg>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
@@ -151,8 +168,14 @@
 
             if (timeRemaining==0){
 
-                $('#final-gems').text(collectedGems);
+                //$('#final-gems').text(collectedGems);
                 $('#game-over').show();
+
+                const socket = io();
+                socket.emit("game-over", collectedGems);
+                
+                
+
                 sounds.background.pause();
                 sounds.gameover.play();
                 sheet.onload = function() {cancelAnimationFrame();}
@@ -193,6 +216,26 @@
             /* Process the next frame */
             requestAnimationFrame(doFrame);
         }
+
+        $("#game-over").on("click", function() {
+
+            /* Hide the start screen */
+            //$("#game-over").hide();
+            socket.on("game-result", (win_lose, not_ur_finalScore, room, index) => {
+                    $('#win_lose').text(collenot_ur_finalScorectedGems);
+                    $('#other_player_score').text(collenot_ur_finalScorectedGems);
+                    socket.leave(room);
+                    
+                });
+
+
+            socket.on("navigate to", () => {
+                window.location.href = "/index.html";
+            });
+            
+
+
+        });
 
         /* Handle the start of the game */
         $("#game-start").on("click", function() {
