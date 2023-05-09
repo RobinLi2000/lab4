@@ -144,6 +144,7 @@ const findingMatch = function(socketID){
 };
 
 let finalScore = [];
+let room = [];
 
 const{ createServer } = require("http");
 const{ Server } = require("socket.io");
@@ -318,8 +319,9 @@ io.on("connection", (socket) => {
         matchMakingResult = findingMatch(socket.id);
         console.log(matchMakingResult);
         if (matchMakingResult) {
-            socket.to(matchMakingResult[0]).emit("join this room", socket.id);
-            socket.to(matchMakingResult[1]).emit("join this room", socket.id);
+            socket.to(matchMakingResult[0]).emit("join this room", socket.request.session.user.username);
+            socket.to(matchMakingResult[1]).emit("join this room", socket.request.session.user.username);
+            room.push(socket.request.session.user.username);
             io.to(matchMakingResult[0]).emit("navigate to", "/gem_rush.html");
             io.to(matchMakingResult[1]).emit("navigate to", "/gem_rush.html");
         }
@@ -327,8 +329,20 @@ io.on("connection", (socket) => {
     
     socket.on("game-over", (collectedGems) => {
         finalScore.push(socket.id, collectedGems);
-        console.log(finalScore);
-        io.to(socket.id).emit("navigate to", "/index.html");
+        if (finalScore.length == 4) {
+            if (finalScore[1] > finalScore[3]) {
+                io.to(finalScore[0]).emit("game-result", "win", finalScore[3], room[0], "/index.html");
+                io.to(finalScore[2]).emit("game-result", "lose", finalScore[1], room[0], "/index.html");
+            } else if (finalScore[1] < finalScore[3]) {
+                io.to(finalScore[0]).emit("game-result", "lose", finalScore[3], room[0], "/index.html");
+                io.to(finalScore[2]).emit("game-result", "win", finalScore[1], room[0], "/index.html");
+            } else {
+                io.to(finalScore[0]).emit("game-result", "draw", finalScore[3], room[0], "/index.html");
+                io.to(finalScore[2]).emit("game-result", "draw", finalScore[1], room[0], "/index.html");
+            }
+            finalScore = [];
+            room = [];
+        }
     });
 
     // Matchmaking client side code
