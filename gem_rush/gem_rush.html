@@ -112,6 +112,8 @@
     <script src="scripts/player.js"></script>
     <script src="scripts/gem.js"></script>
     <script src="scripts/fire.js"></script>
+    <script src="/socket.io/socket.io.min.js"></script>
+    <script src="scripts/server/socket.js"></script>
     <script>
     $(document).ready(function() {
         /* Get the canvas and 2D context */
@@ -173,9 +175,11 @@
 
                 const socket = io();
                 socket.emit("game-over", collectedGems);
-                
-                
 
+                socket.on("navigate to", (url) => {
+                window.location.href = url;
+                });
+                
                 sounds.background.pause();
                 sounds.gameover.play();
                 sheet.onload = function() {cancelAnimationFrame();}
