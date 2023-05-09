@@ -316,8 +316,8 @@ io.on("connection", (socket) => {
     socket.on("finding match", () => {
         matchMakingResult = MatchMaking.findingMatch(socket.id);
         if (matchMakingResult) {
-            io.to(matchMakingResult[0]).join(socket.id);
-            io.to(matchMakingResult[1]).join(socket.id);
+            io.to(matchMakingResult[0]).emit("join this room",socket.id);
+            io.to(matchMakingResult[1]).emit("join this room",socket.id);
             io.to(socket.id).emit("navigate to", "/gem_rush.html");
         }
     });
