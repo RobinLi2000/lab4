@@ -5,13 +5,13 @@
     --field-background: white;
     --field-background-hover: #eee;
     --input-background: #eee;
-    --overlay-background: rgba(245, 158, 114, 0.8);
-    --overlay-caption-color: #eb4a40;
-    --overlay-content-background: linear-gradient(white, #fde0c5);
+    --overlay-background: rgba(162, 245, 114, 0.8);
+    --overlay-caption-color: #76eb40;
+    --overlay-content-background: linear-gradient(white, #0c912d);
 
-    --header-background: linear-gradient(to right, #eb4a40, #f59e72);
-    --main-panel-background: linear-gradient(white, #fde0c5);
-    --online-users-panel-background: linear-gradient(to right, #fde0c5, #facba6);
+    --header-background: linear-gradient(to right, #0c912d, #59b67b);
+    --main-panel-background: linear-gradient(white, #59b67b);
+    --online-users-panel-background: linear-gradient(to right, #0c912d, #59b67b);
     --chat-panel-background: none;
 
     --title-color: white;
@@ -20,12 +20,12 @@
     --font-color: black;
     --date-color: gray;
 
-    --register-form-background: linear-gradient(#fde0c5, #facba6);
+    --register-form-background: linear-gradient(#0c912d, #59b67b);
     --warning-color: red;
 
     --button-color: white;
-    --button-background: #f2855d;
-    --button-background-hover: #f8b58b;
+    --button-background: #59b67b;
+    --button-background-hover: #d7f88b;
 }
 * {
     font-family: "Abel", sans-serif;
