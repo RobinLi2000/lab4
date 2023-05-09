@@ -11,6 +11,7 @@
         <div id="header" class="row">
             <div id="title">The Chatroom
                 <span class="material-icons">chat</span>
+				<button id="match-making-button">MatchMaking</button>
             </div>
 
             <div class="spacer-grow"></div>
@@ -35,7 +36,7 @@
 
             <div id="online-users-panel" class="col">
                 <div id="online-users-area" class="col"></div>
-                <div id="friend-list-area" style="border: solid 3px green !important; height: 400px; width: 100%;">
+                <div id="friend-list-area" style="border: solid 3px orangered !important; height: 400px; width: 100%;">
                     <p>Friends:</p>
                     
                 </div>
@@ -76,11 +77,11 @@
     </div>
 
     <script src="/socket.io/socket.io.min.js"></script>
-    <script src="scripts/socket.js"></script>
+    <script src="scripts/server/socket.js"></script>
     <!--<script src="scripts/avatar.js"></script>-->
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/registration.js"></script>
-    <script src="scripts/authentication.js"></script>
+    <script src="scripts/server/ui.js"></script>
+    <script src="scripts/server/registration.js"></script>
+    <script src="scripts/server/authentication.js"></script>
     <script>
     $(document).ready(function() {
         // Initialize the UI
