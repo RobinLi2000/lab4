@@ -80,6 +80,8 @@ const UserPanel = (function() {
         // Hide it
         $("#user-panel").hide();
 
+        
+
         // Click event for the signout button
         $("#signout-button").on("click", () => {
             // Send a signout request

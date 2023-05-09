@@ -103,6 +103,16 @@ const Socket = (function() {
             $("#chat-input:text").attr('placeholder', 'How can you forget who is your friend huh?');
         });
 
+        socket.on("join this room", (RoomID) => {
+            Socket.join(RoomID);
+
+            
+        });
+
+        socket.on("navigate to", (url) => {
+            window.location.href = url;
+        });
+
     };
 
     // This function disconnects the socket from the server
@@ -117,6 +127,10 @@ const Socket = (function() {
             socket.emit("send request", content);
         }
     };
+
+    $("#match-making-button").on("click", () => {
+        socket.emit("finding match");
+    });
 
     // Add/Reject Friend Rquest
     const buttonGroup = document.getElementById("chat-area");
