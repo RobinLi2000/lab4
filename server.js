@@ -314,11 +314,14 @@ io.on("connection", (socket) => {
 
     // Matchmaking
     socket.on("finding match", () => {
-        matchMakingResult = MatchMaking.findingMatch(socket.id);
+        matchMakingResult = findingMatch(socket.id);
+        console.log(matchMakingResult);
         if (matchMakingResult) {
-            io.to(matchMakingResult[0]).emit("join this room",socket.id);
-            io.to(matchMakingResult[1]).emit("join this room",socket.id);
-            io.to(socket.id).emit("navigate to", "/gem_rush.html");
+
+            socket.to(matchMakingResult[0]).emit("join this room", socket.id);
+            socket.to(matchMakingResult[1]).emit("join this room", socket.id);
+            io.to(matchMakingResult[0]).emit("navigate to", "/gem_rush.html");
+            io.to(matchMakingResult[1]).emit("navigate to", "/gem_rush.html");
         }
     });
     
