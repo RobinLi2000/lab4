@@ -143,6 +143,7 @@ const findingMatch = function(socketID){
     }
 };
 
+let finalScore = [];
 
 const{ createServer } = require("http");
 const{ Server } = require("socket.io");
@@ -317,7 +318,6 @@ io.on("connection", (socket) => {
         matchMakingResult = findingMatch(socket.id);
         console.log(matchMakingResult);
         if (matchMakingResult) {
-
             socket.to(matchMakingResult[0]).emit("join this room", socket.id);
             socket.to(matchMakingResult[1]).emit("join this room", socket.id);
             io.to(matchMakingResult[0]).emit("navigate to", "/gem_rush.html");
@@ -325,6 +325,12 @@ io.on("connection", (socket) => {
         }
     });
     
+    socket.on("game-over", (collectedGems) => {
+        finalScore.push(socket.id, collectedGems);
+        console.log(finalScore);
+        io.to(socket.id).emit("navigate to", "/index.html");
+    });
+
     // Matchmaking client side code
     // Please add this to the client side
     // Debug might be needed
