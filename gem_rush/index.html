@@ -1,66 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Online game Rush! - Home</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="style.css">
-	<script src="scripts/server/ui.js"></script>
+    <title>Online Gem Rush</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-	<header>
-		<h1>Online Gem Rush! </h1> 
-		<nav>
-			<ul>
-				<li><a href="#">See Friends (Online/Offline)</a></li>
-				<li><a href="#">Invite Friend for a Match</a></li>
-				<li><a href="#">Matchmaking</a></li>
-			</ul>
-		</nav>
-	</header>
-	<main>
-		<section>
-			<h2>About the Game</h2>
-			<p>You can control your player, collect gems and even speed up!</p>
-			<p>Make friends online, play together and have a competition now!</p>
-			<p>CONTROL: ↑, ↓, ←, → for direction change. Holding spacebar for speed up.</p>
-		</section>
-		<section>
-			<h2>Sign In</h2>
-			<form id="login-form">
-				<label for="username">Username:</label>
-				<input type="text" id="username" name="username"><br>
+    <div id="container" class="col">
+        <div id="header" class="row">
+            <div id="title">Online Gem Rush
+                <span class="material-icons">diamond</span>
+				<button id="match-making-button">MatchMaking</button>
+            </div>
 
-				<label for="name">Name:</label>
-				<input type="text" id="name" name="username"><br>
+            <div class="spacer-grow"></div>
 
-				<label for="password">Password:</label>
-				<input type="password" id="password" name="password"><br>
+            <div id="user-panel" class="row">
+                <div class="field-content row shadow">
+                    <!--<span class="user-avatar"></span>-->
+                    <span class="user-name">-</span>
+                </div>
+                <button id="signout-button" class="icon"><span class="material-icons">logout</span></button>
+            </div>
+        </div>
 
-				<input type="button" value="Sign In" onclick="handleLoginFormSubmit()">
-			</form>
-		</section>
-		<section>
-			<h2>Register a New Account</h2>
-			<form>
-				<label for="new_username">Username:</label>
-				<input type="text" id="new_username" name="new_username"><br>
+        <div id="main-panel" class="row">
+            <div id="chat-panel" class="col">
+                <div id="chat-area" class="col"></div>
+                <div id="typing-status" class="col"></div>
+                <form id="chat-input-form" autocomplete="off">
+                    <input id="chat-input" placeholder="Send a friend request: Enter a username"></input>
+                </form>
+            </div>
 
-				<label for="name">Name:</label>
-				<input type="text" id="name" name="username"><br>
+            <div id="online-users-panel" class="col">
+                <div id="online-users-area" class="col" ></div>
+				<div class="col">Friends:</div>
+                <div id="friend-list-area" class="col"></div>
+            </div>
+        </div>
+    </div>
 
-				<label for="new_password">Password:</label>
-				<input type="password" id="new_password" name="new_password"><br>
+    <div id="signin-overlay" class="overlay row">
+        <div class="content shadow row">
+            <form id="signin-form" class="col">
+                <div class="caption">SIGN IN WITH YOUR ACCOUNT</div>
+                <div class="spacer-0"></div>
+                <input id="signin-username" placeholder="Enter your username"></input>
+                <input id="signin-password" type="password" placeholder="Enter your password"></input>
+                <div class="spacer-0"></div>
+                <button type="submit">Sign In</button>
+                <div id="signin-message" class="warning center"></div>
+                <div class="spacer-grow"></div>
+            </form>
 
-				<label for="confirm_password">Confirm Password:</label>
-				<input type="password" id="confirm_password" name="confirm_password"><br>
+            <div class="spacer-0"></div>
 
-				<input type="button" value="Register" onclick="handleRegisterFormSubmit()">
-			</form>
-		</section>
-	</main>
-	<footer>
-		<p><a href="#">Log Out</a></p>
-	</footer>
+            <form id="register-form" class="col">
+                <div class="caption">OR, REGISTER IF YOU DO NOT HAVE ONE</div>
+                <div class="spacer-0"></div>
+                <input id="register-username" maxlength="10" placeholder="Enter your username"></input>
+                <!--<select id="register-avatar">
+                    <option value="">Select your avatar</option>
+                </select>-->
+                <input id="register-name" maxlength="16" placeholder="Enter your name"></input>
+                <input id="register-password" type="password" placeholder="Enter your password"></input>
+                <input id="register-confirm" type="password" placeholder="Enter your password again"></input>
+                <div class="spacer-0"></div>
+                <button type="submit">Register</button>
+                <div id="register-message" class="warning center"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.min.js"></script>
+    <script src="scripts/server/socket.js"></script>
+    <!--<script src="scripts/avatar.js"></script>-->
+    <script src="scripts/server/ui.js"></script>
+    <script src="scripts/server/registration.js"></script>
+    <script src="scripts/server/authentication.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Initialize the UI
+        UI.initialize();
+
+        // Validate the signin
+        Authentication.validate(
+            () => {
+                SignInForm.hide();
+                UserPanel.update(Authentication.getUser());
+                UserPanel.show();
+
+                Socket.connect();
+            },
+            () => { SignInForm.show(); }
+        );
+    });
+    </script>
 </body>
 </html>
+

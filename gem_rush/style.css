@@ -1,109 +1,252 @@
-/* Global Styles */
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+:root {
+    --material-icons-color: black;
+    --field-color: gray;
+    --field-background: white;
+    --field-background-hover: #eee;
+    --input-background: #eee;
+    --overlay-background: rgba(162, 245, 114, 0.8);
+    --overlay-caption-color: #76eb40;
+    --overlay-content-background: linear-gradient(white, #0c912d);
+
+    --header-background: linear-gradient(to right, #0c912d, #59b67b);
+    --main-panel-background: linear-gradient(white, #59b67b);
+    --online-users-panel-background: linear-gradient(to right, #0c912d, #59b67b);
+    --chat-panel-background: none;
+
+    --title-color: white;
+    --caption-color: white;
+
+    --font-color: black;
+    --date-color: gray;
+
+    --register-form-background: linear-gradient(#0c912d, #59b67b);
+    --warning-color: red;
+
+    --button-color: white;
+    --button-background: #59b67b;
+    --button-background-hover: #d7f88b;
+}
+* {
+    font-family: "Abel", sans-serif;
+    color: var(--font-color);
+    box-sizing: border-box;
+}
+
+/* Basic */
 body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background-color: #f2f2f2;
+    min-width: 600px;
+    min-height: 300px;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+.center { text-align: center; }
+.shadow { box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.4); }
+
+/* Google icon */
+.material-icons {
+    color: var(--material-icons-color);
 }
 
-header {
-	background-color: #4CAF50;
-	color: white;
-	padding: 20px;
+/* Flexbox related */
+.row, .col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+}
+.col { flex-direction: column; }
+.spacer-0 { width: 0; height: 0; }
+.spacer-1 { width: 5px; height: 5px; }
+.spacer-2 { width: 10px; height: 10px; }
+.spacer-grow { flex-grow: 1; }
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: var(--overlay-background);
+}
+.overlay .caption {
+    font-size: 120%;
+    color: var(--overlay-caption-color);
+}
+.overlay .content {
+    background: var(--overlay-content-background);
+}
+.warning {
+    font-weight: bold;
+    color: var(--warning-color);
 }
 
-nav ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
+/* Form related */
+form input, form select {
+    width: 100%;
+}
+input, select {
+    font-size: 1rem;
+    background: var(--input-background);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+}
+input::placeholder, select {
+    color: gray;
+}
+button {
+    font-weight: bold;
+    height: 40px;
+    border: 1px solid black;
+    color: var(--button-color);
+    background: var(--button-background);
+    box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.4);
+    padding: 0 20px;
+    transition: 1s background;
+    cursor: pointer;
+}
+button:hover {
+    background: var(--button-background-hover);
+}
+button:active {
+    margin: 2px -2px -2px 2px;
+    box-shadow: 0px 0px;
+}
+button.icon {
+    height: inherit;
+    border: none;
+    border-radius: 2px;
+    background: none;
+    box-shadow: none;
+    padding: 3px 5px;
+    padding-top: 5px;
+}
+button.icon * {
+    color: white;
+}
+button.icon:hover {
+    background: var(--button-background-hover);
+}
+button.icon:active {
+    margin: 2px -2px -2px 2px;
 }
 
-nav li {
-	float: right;
+/* Data field caption and content */
+.field-content {
+    border-radius: 50px;
+    padding: 10px 15px;
+    background: var(--field-background);
+    transition: 1s background;
+}
+.field-content * {
+    color: var(--field-color);
+}
+.field-content:hover {
+    background: var(--field-background-hover);
+}
+.user-name {
+    white-space: nowrap;
 }
 
-nav li a {
-	display: block;
-	color: white;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
+/* Top level container */
+#container {
+    align-items: stretch;
+    gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 0;
 }
 
-nav li a:hover {
-	background-color: #ddd;
-	color: black;
+/* Header */
+#header {
+    height: 80px;
+    background: var(--header-background);
+    padding: 0 20px;
+}
+#title {
+    font-family: Abel, sans-serif;
+    font-size: 300%;
+    text-transform: uppercase;
+    color: var(--title-color);
+    user-select: none;
+}
+#title .material-icons {
+    color: var(--title-color);
+    font-size: 36px;
+}
+#user-panel {
+    padding: 0;
+}
+#signin-user {
+    cursor: pointer;
 }
 
-main {
-	margin: 20px;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
+/* Main panel */
+#main-panel {
+    height: calc(100% - 80px);
+    background: var(--main-panel-background);
 }
 
-section {
-	background-color: #ffffff;
-	border-radius: 10px;
-	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-	margin: 10px;
-	flex-basis: 100%;
+/* Chat area */
+#chat-panel {
+    flex-grow: 1;
+    align-items: stretch;
+    height: 100%;
+    background: var(--chat-panel-background);
+    padding: 0;
+}
+#chat-area {
+    height: 100%;
+    align-items: flex-start;
+    justify-content: start;
+    gap: 20px;
+    overflow-y: auto;
+    padding: 10px;
+}
+.chat-message-panel {
+    align-items: flex-start;
+    padding: 0;
+}
+.chat-message {
+    align-items: start;
+    gap: 5px;
+    padding: 0;
+}
+.chat-date {
+    font-size: 75%;
+    color: var(--date-color);
 }
 
-section h2 {
-	background-color: #4CAF50;
-	color: white;
-	padding: 10px;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
+/* Online users panel */
+#online-users-panel {
+	flex: 0 0 250px;
+    height: 100%;
+    padding: 0;
+    background: var(--online-users-panel-background);
 }
-section.about {
-	flex-basis: 60%;
-}
-
-section.signin,
-section.register {
-	flex-basis: 30%;
-}
-
-form {
-	margin: 20px;
-	display: flex;
-	flex-direction: column;
+#online-users-area {
+    flex-grow: 1;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: start;
+    overflow-y: auto;
 }
 
-label {
-	margin: 10px 0;
+/* Signin overlay */
+#signin-form {
+    width: 270px;
+    align-self: stretch;
+}
+#register-form {
+    width: 380px;
+    background: var(--register-form-background);
+    padding: 20px;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="submit"] {
-	padding: 10px;
-	border: none;
-	border-radius: 5px;
-	background-color: #f2f2f2;
-}
-
-input[type="button"] {
-	margin-top: 20px;
-	background-color: #4CAF50;
-	color: white;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-input[type="button"]:hover {
-	background-color: #3e8e41;
-}
-
-footer {
-	background-color: #4CAF50;
-	color: white;
-	padding: 10px;
-	text-align: center;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+/* Edit user overlay */
+#edit-user-form {
+    width: 270px;
+    align-self: stretch;
 }
